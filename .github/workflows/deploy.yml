@@ -32,11 +32,9 @@ jobs:
       - name: List files after generating photos.json
         run: ls -la
 
-      # 6️⃣ Install Elm
-      - name: Setup Elm
-        uses: elm-tooling/setup-elm@v1
-        with:
-          version: 0.21.1
+        # 6️⃣ Install Elm
+      - name: Install Elm
+        run: npm install -g elm
 
       # 7️⃣ Build Elm to main.js in workflow root
       - name: Build Elm
