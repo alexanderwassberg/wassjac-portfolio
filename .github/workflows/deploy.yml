@@ -1,0 +1,45 @@
+name: Build and Deploy Portfolio
+
+on:
+  push:
+    branches:
+      - main  # or main, depending on your repo
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js for the build script
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 3. Install Node dependencies
+      - name: Install Node dependencies
+        run: npm install
+
+      # 4. Install Elm
+      - name: Install Elm
+        run: npm install -g elm
+
+      # 5. Generate photos.json from Markdown
+      - name: Generate photos.json
+        run: node scripts/build-photos.js
+
+      # 6. Build Elm app
+      - name: Build Elm
+        run: elm make src/Main.elm --optimize --output=main.js
+
+      # 7. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+
