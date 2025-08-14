@@ -3,46 +3,54 @@ name: Build and Deploy Portfolio
 on:
   push:
     branches:
-      - main  # or main, depending on your repo
+      - main  # deploy on push to main
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js (for build script)
-      - name: Set up Node.js
+      # 2️⃣ Set up Node.js (for build script)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # 3. Install Node dependencies
+      # 3️⃣ Install Node dependencies
       - name: Install Node dependencies
-        run: npm install
+        run: npm ci
 
-      # 4. Install Elm
-      - name: Install Elm
-        run: npm install -g elm
-
-      # 5. Generate photos.json from Markdown
+      # 4️⃣ Generate photos.json in workflow root
       - name: Generate photos.json
         run: node scripts/build-photos.js
 
-      # 6. Build Elm app
+      # 5️⃣ Debug: confirm photos.json exists
+      - name: List files after generating photos.json
+        run: ls -la
+
+      # 6️⃣ Install Elm
+      - name: Setup Elm
+        uses: elm-tooling/setup-elm@v1
+        with:
+          version: 0.21.1
+
+      # 7️⃣ Build Elm to main.js in workflow root
       - name: Build Elm
         run: elm make src/Main.elm --optimize --output=main.js
 
-      - name: List files before deploy
+      # 8️⃣ Debug: confirm main.js exists
+      - name: List files after Elm build
         run: ls -la
 
-      # 7. Deploy to GitHub Pages
+      # 9️⃣ Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
-          force_orphan: true   # ensures first-time deployment works
+          force_orphan: true
+
