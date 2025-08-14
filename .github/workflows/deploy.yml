@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js for the build script
+      # 2. Set up Node.js (for build script)
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -42,4 +42,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
-
+          force_orphan: true   # ensures first-time deployment works
