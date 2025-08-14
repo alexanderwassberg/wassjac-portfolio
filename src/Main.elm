@@ -50,8 +50,15 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Html.div []
-        (List.map viewPhoto model.photos)
+    Html.main_
+        []
+        [ Html.h2
+            []
+            [ Html.text "Portfolio"
+            ]
+        , Html.div []
+            (List.map viewPhoto model.photos)
+        ]
 
 viewPhoto : Photo -> Html Msg
 viewPhoto p =
